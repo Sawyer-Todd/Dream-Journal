@@ -11,7 +11,6 @@
     :root {
       --bg: #ffffff;
       --bg-secondary: #f5f5f3;
-      --bg-tertiary: #eeede9;
       --text-primary: #1a1a1a;
       --text-secondary: #6b6b6b;
       --text-tertiary: #aaa;
@@ -25,7 +24,6 @@
       :root {
         --bg: #1a1a1a;
         --bg-secondary: #242424;
-        --bg-tertiary: #2e2e2e;
         --text-primary: #f0f0f0;
         --text-secondary: #999;
         --text-tertiary: #666;
@@ -34,27 +32,18 @@
       }
     }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text-primary);
-      font-family: 'DM Sans', sans-serif;
-      overflow: hidden;
-    }
+    html, body { height: 100%; background: var(--bg); color: var(--text-primary); font-family: 'DM Sans', sans-serif; overflow: hidden; }
 
-    .app {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    .app { height: 100vh; display: flex; flex-direction: column; }
 
     .app-header {
-      padding: 14px 16px 12px;
+      padding: 12px 16px;
       border-bottom: 0.5px solid var(--border);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
     }
 
     .app-title {
@@ -63,12 +52,27 @@
       font-size: 20px;
       font-weight: 400;
       color: var(--text-primary);
+      white-space: nowrap;
     }
 
-    .app-subtitle {
+    .nav-controls { display: flex; align-items: center; gap: 6px; }
+
+    .nav-select {
       font-size: 12px;
-      color: var(--text-tertiary);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      padding: 5px 8px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-hover);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
     }
+
+    .nav-select:focus { border-color: var(--text-tertiary); }
 
     .scroll-area {
       flex: 1;
@@ -81,12 +85,7 @@
     .scroll-area::-webkit-scrollbar { height: 4px; }
     .scroll-area::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
 
-    .days-row {
-      display: flex;
-      flex-direction: row;
-      height: 100%;
-      min-width: max-content;
-    }
+    .days-row { display: flex; flex-direction: row; height: 100%; min-width: max-content; }
 
     .day-col {
       width: 50vw;
@@ -108,46 +107,12 @@
       flex-shrink: 0;
     }
 
-    .day-header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .day-date {
-      display: flex;
-      align-items: baseline;
-      gap: 5px;
-    }
-
-    .day-num {
-      font-size: 20px;
-      font-weight: 500;
-      color: var(--text-primary);
-      line-height: 1;
-    }
-
-    .day-month {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-
-    .day-dow {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-
-    .day-meta {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .day-header-row { display: flex; align-items: center; justify-content: space-between; }
+    .day-date { display: flex; align-items: baseline; gap: 5px; }
+    .day-num { font-size: 20px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+    .day-month { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+    .day-dow { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+    .day-meta { display: flex; align-items: center; gap: 6px; }
 
     .lucid-select {
       font-size: 10px;
@@ -164,150 +129,79 @@
       outline: none;
     }
 
-    .lucid-select.is-lucid {
-      background: #EEEDFE;
-      color: #3C3489;
-      border-color: #AFA9EC;
-    }
-
+    .lucid-select.is-lucid { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
     @media (prefers-color-scheme: dark) {
-      .lucid-select.is-lucid {
-        background: #26215C;
-        color: #CECBF6;
-        border-color: #534AB7;
-      }
+      .lucid-select.is-lucid { background: #26215C; color: #CECBF6; border-color: #534AB7; }
     }
 
-    .instance-count {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-tertiary);
-    }
+    .instance-count { font-size: 11px; font-weight: 500; color: var(--text-tertiary); }
 
     .day-body {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
     }
 
     .day-body::-webkit-scrollbar { width: 3px; }
     .day-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
-    .instance-block {
-      padding: 10px 12px;
-      border-bottom: 0.5px solid var(--border);
-      flex-shrink: 0;
-    }
+    .instance-block { padding: 10px 12px; border-bottom: 0.5px solid var(--border); flex-shrink: 0; }
 
-    .instance-label {
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin-bottom: 5px;
-    }
+    .instance-label { font-size: 9px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 5px; }
 
-    .instance-text {
-      font-family: 'Lora', serif;
-      font-size: 13px;
-      line-height: 1.75;
-      color: var(--text-primary);
-      white-space: pre-wrap;
-    }
+    .instance-text { font-family: 'Lora', serif; font-size: 13px; line-height: 1.75; color: var(--text-primary); white-space: pre-wrap; }
 
     .instance-actions { margin-top: 7px; }
 
     .action-btn {
-      font-size: 11px;
-      padding: 3px 8px;
+      font-size: 11px; padding: 3px 8px;
       border: 0.5px solid var(--border-hover);
       border-radius: var(--radius-md);
-      background: transparent;
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
+      background: transparent; color: var(--text-secondary);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
     }
 
     .action-btn:hover { background: var(--bg-secondary); }
 
-    .empty-day {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+    .empty-day { flex: 1; display: flex; align-items: center; justify-content: center; }
 
     .add-first-btn {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
-      padding: 8px;
+      font-size: 12px; color: var(--text-tertiary); background: none;
+      border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; padding: 8px;
     }
 
     .add-first-btn:hover { color: var(--text-secondary); }
 
     .new-instance-btn {
-      display: block;
-      width: 100%;
-      padding: 9px;
-      background: transparent;
-      border: none;
-      border-top: 0.5px solid var(--border);
-      color: var(--text-tertiary);
-      font-size: 12px;
-      font-family: 'DM Sans', sans-serif;
-      cursor: pointer;
-      text-align: center;
-      margin-top: auto;
-      flex-shrink: 0;
+      display: block; width: 100%; padding: 9px; background: transparent; border: none;
+      border-top: 0.5px solid var(--border); color: var(--text-tertiary); font-size: 12px;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; text-align: center;
+      margin-top: auto; flex-shrink: 0;
     }
 
     .new-instance-btn:hover { background: var(--bg-secondary); color: var(--text-secondary); }
 
-    /* Modal */
     .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.4);
+      position: fixed; inset: 0; background: rgba(0,0,0,0.4);
       display: flex; align-items: center; justify-content: center;
       z-index: 100; padding: 1rem;
     }
 
     .modal {
-      background: var(--bg);
-      border-radius: var(--radius-lg);
+      background: var(--bg); border-radius: var(--radius-lg);
       border: 0.5px solid var(--border-hover);
-      padding: 1.25rem;
-      width: 100%; max-width: 480px;
+      padding: 1.25rem; width: 100%; max-width: 480px;
     }
 
     .modal h3 {
-      font-family: 'Lora', serif;
-      font-style: italic;
-      font-size: 18px;
-      font-weight: 400;
-      margin-bottom: 1rem;
-      color: var(--text-primary);
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 18px; font-weight: 400; margin-bottom: 1rem; color: var(--text-primary);
     }
 
     .modal textarea {
-      width: 100%;
-      font-family: 'Lora', serif;
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--text-primary);
-      background: var(--bg-secondary);
-      border: 0.5px solid var(--border-hover);
-      border-radius: var(--radius-md);
-      padding: 10px 12px;
-      resize: vertical;
-      min-height: 140px;
+      width: 100%; font-family: 'Lora', serif; font-size: 14px; line-height: 1.8;
+      color: var(--text-primary); background: var(--bg-secondary);
+      border: 0.5px solid var(--border-hover); border-radius: var(--radius-md);
+      padding: 10px 12px; resize: vertical; min-height: 140px;
     }
 
     .modal textarea:focus { outline: none; border-color: var(--text-tertiary); }
@@ -315,17 +209,14 @@
     .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
 
     .btn-cancel {
-      padding: 7px 14px; font-size: 13px;
-      border: 0.5px solid var(--border-hover);
-      border-radius: var(--radius-md);
-      background: transparent; color: var(--text-secondary);
+      padding: 7px 14px; font-size: 13px; border: 0.5px solid var(--border-hover);
+      border-radius: var(--radius-md); background: transparent; color: var(--text-secondary);
       cursor: pointer; font-family: 'DM Sans', sans-serif;
     }
 
     .btn-save {
-      padding: 7px 14px; font-size: 13px; font-weight: 500;
-      border: none; border-radius: var(--radius-md);
-      background: var(--text-primary); color: var(--bg);
+      padding: 7px 14px; font-size: 13px; font-weight: 500; border: none;
+      border-radius: var(--radius-md); background: var(--text-primary); color: var(--bg);
       cursor: pointer; font-family: 'DM Sans', sans-serif;
     }
 
@@ -338,7 +229,10 @@
 <div class="app">
   <div class="app-header">
     <span class="app-title">Dream Journal</span>
-    <span class="app-subtitle" id="entry-count"></span>
+    <div class="nav-controls">
+      <select class="nav-select" id="month-select" onchange="jumpToMonth()"></select>
+      <select class="nav-select" id="year-select" onchange="jumpToMonth()"></select>
+    </div>
   </div>
   <div class="scroll-area" id="scroll-area">
     <div class="days-row" id="days-row"></div>
@@ -358,7 +252,8 @@
 
 <script>
   const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
   function todayISO() {
     const n = new Date();
@@ -370,10 +265,14 @@
     return new Date(y, m-1, d);
   }
 
+  function toISO(date) {
+    return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+  }
+
   function offsetISO(base, days) {
     const d = parseISO(base);
     d.setDate(d.getDate() + days);
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    return toISO(d);
   }
 
   let data = null;
@@ -384,20 +283,64 @@
     try { localStorage.setItem('dreamjournal_v1', JSON.stringify(data)); } catch(e) {}
   }
 
-  function getEntry(date) {
-    return data.entries.find(e => e.date === date);
-  }
+  function getEntry(date) { return data.entries.find(e => e.date === date); }
 
   function getDays() {
     const today = todayISO();
     const days = [];
-    for (let i = 179; i >= 0; i--) days.push(offsetISO(today, -i));
+    for (let i = 364; i >= 0; i--) days.push(offsetISO(today, -i));
     return days;
   }
 
-  function updateCount() {
-    const total = data.entries.length;
-    document.getElementById('entry-count').textContent = total ? `${total} night${total !== 1 ? 's' : ''} logged` : '';
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function populateNavSelects() {
+    const today = new Date();
+    const yearSel = document.getElementById('year-select');
+    const monthSel = document.getElementById('month-select');
+
+    yearSel.innerHTML = '';
+    for (let y = today.getFullYear(); y >= today.getFullYear() - 1; y--) {
+      const opt = document.createElement('option');
+      opt.value = y;
+      opt.textContent = y;
+      if (y === today.getFullYear()) opt.selected = true;
+      yearSel.appendChild(opt);
+    }
+
+    monthSel.innerHTML = '';
+    MONTHS.forEach((m, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = m;
+      if (i === today.getMonth()) opt.selected = true;
+      monthSel.appendChild(opt);
+    });
+  }
+
+  function jumpToMonth() {
+    const year = parseInt(document.getElementById('year-select').value);
+    const month = parseInt(document.getElementById('month-select').value);
+    const target = new Date(year, month, 1);
+    const targetISO = toISO(target);
+
+    const el = document.getElementById('day-' + targetISO);
+    if (el) {
+      el.scrollIntoView({ inline: 'start', behavior: 'smooth' });
+      return;
+    }
+
+    const days = getDays();
+    let closest = days[0];
+    let closestDiff = Infinity;
+    days.forEach(iso => {
+      const diff = Math.abs(parseISO(iso) - target);
+      if (diff < closestDiff) { closestDiff = diff; closest = iso; }
+    });
+    const closestEl = document.getElementById('day-' + closest);
+    if (closestEl) closestEl.scrollIntoView({ inline: 'start', behavior: 'smooth' });
   }
 
   function renderAll() {
@@ -435,13 +378,13 @@
           <div class="day-header-row">
             <div class="day-date">
               <span class="day-num">${dt.getDate()}</span>
-              <span class="day-month">${MONTHS[dt.getMonth()]}</span>
+              <span class="day-month">${MONTHS_SHORT[dt.getMonth()]}</span>
               <span class="day-dow">${DOW[dt.getDay()]}</span>
             </div>
             <div class="day-meta">
-              ${entry ? `<select class="lucid-select${isLucid ? ' is-lucid' : ''}" onchange="setDreamType('${iso}', this.value)">
-                <option value="normal"${!isLucid ? ' selected' : ''}>normal</option>
-                <option value="lucid"${isLucid ? ' selected' : ''}>lucid</option>
+              ${entry ? `<select class="lucid-select${isLucid?' is-lucid':''}" onchange="setDreamType('${iso}', this.value)">
+                <option value="normal"${!isLucid?' selected':''}>normal</option>
+                <option value="lucid"${isLucid?' selected':''}>lucid</option>
               </select>` : ''}
               ${count >= 2 ? `<span class="instance-count">${count}</span>` : ''}
             </div>
@@ -455,16 +398,10 @@
       </div>`;
     }).join('');
 
-    updateCount();
-
     setTimeout(() => {
       const todayEl = document.getElementById('day-' + todayISO());
       if (todayEl) todayEl.scrollIntoView({ inline: 'end', behavior: 'instant' });
     }, 30);
-  }
-
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   let modalContext = null;
@@ -478,7 +415,7 @@
       document.getElementById('m-body').value = inst ? inst.body : '';
     } else {
       const dt = parseISO(date);
-      const label = `${dt.getDate()} ${MONTHS[dt.getMonth()]}`;
+      const label = `${dt.getDate()} ${MONTHS_SHORT[dt.getMonth()]}`;
       document.getElementById('modal-title').textContent = date === todayISO() ? 'New dream — today' : `New dream — ${label}`;
       document.getElementById('m-body').value = '';
     }
@@ -529,6 +466,7 @@
     if (e.key === 'Escape') closeModal();
   });
 
+  populateNavSelects();
   renderAll();
 </script>
 </body>
