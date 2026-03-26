@@ -36,6 +36,7 @@
 
     .app { height: 100vh; display: flex; flex-direction: column; }
 
+    /* ── Header ── */
     .app-header {
       padding: 12px 16px;
       border-bottom: 0.5px solid var(--border);
@@ -46,14 +47,28 @@
       gap: 12px;
     }
 
+    .header-left { display: flex; align-items: center; gap: 18px; }
+
     .app-title {
       font-family: 'Lora', serif;
       font-style: italic;
       font-size: 20px;
       font-weight: 400;
-      color: var(--text-primary);
+      color: var(--text-tertiary);
       white-space: nowrap;
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.15s;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid transparent;
     }
+
+    .app-title.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+    }
+
+    .app-title:hover:not(.active) { color: var(--text-secondary); }
 
     .nav-controls { display: flex; align-items: center; gap: 6px; }
 
@@ -74,6 +89,52 @@
 
     .nav-select:focus { border-color: var(--text-tertiary); }
 
+    /* ── Week picker ── */
+    .week-picker-wrap { position: relative; }
+
+    .week-btn {
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      padding: 5px 10px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-hover);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .week-btn:hover { background: var(--bg); color: var(--text-primary); }
+
+    .week-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: var(--bg);
+      border: 0.5px solid var(--border-hover);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      z-index: 50;
+      max-height: 260px;
+      overflow-y: auto;
+      min-width: 100px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-hover) transparent;
+    }
+
+    .week-dropdown-item {
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+
+    .week-dropdown-item:hover { background: var(--bg-secondary); color: var(--text-primary); }
+    .week-dropdown-item.selected { color: var(--text-primary); font-weight: 500; }
+
+    /* ── Scroll / days row ── */
     .scroll-area {
       flex: 1;
       overflow-x: auto;
@@ -87,6 +148,7 @@
 
     .days-row { display: flex; flex-direction: row; height: 100%; min-width: max-content; }
 
+    /* ── Dream Journal columns ── */
     .day-col {
       width: 50vw;
       min-width: 160px;
@@ -109,9 +171,9 @@
 
     .day-header-row { display: flex; align-items: center; justify-content: space-between; }
     .day-date { display: flex; align-items: baseline; gap: 5px; }
-    .day-num { font-size: 20px; font-weight: 500; color: var(--text-primary); line-height: 1; }
-    .day-month { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
-    .day-dow { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+    .day-num  { font-size: 20px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+    .day-month{ font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+    .day-dow  { font-size: 10px; font-weight: 500; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
     .day-meta { display: flex; align-items: center; gap: 6px; }
 
     .lucid-select {
@@ -134,7 +196,7 @@
       .lucid-select.is-lucid { background: #26215C; color: #CECBF6; border-color: #534AB7; }
     }
 
-    .instance-count { font-size: 11px; font-weight: 500; color: var(--text-tertiary); }
+    .instance-count { font-size: 11px; font-weight: 500; color: #e03030; }
 
     .day-body {
       flex: 1; overflow-y: auto; display: flex; flex-direction: column;
@@ -162,24 +224,32 @@
 
     .action-btn:hover { background: var(--bg-secondary); }
 
-    .empty-day { flex: 1; display: flex; align-items: center; justify-content: center; }
+    /* Change 4: empty-day fills entire remaining space */
+    .empty-day { flex: 1; display: flex; align-items: stretch; }
 
     .add-first-btn {
+      flex: 1;
       font-size: 12px; color: var(--text-tertiary); background: none;
-      border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; padding: 8px;
+      border: none; cursor: pointer; font-family: 'DM Sans', sans-serif;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    .add-first-btn:hover { color: var(--text-secondary); }
+    .add-first-btn:hover { color: var(--text-secondary); background: var(--bg-secondary); }
 
+    /* Change 5: new-instance button grows to fill remaining vertical space */
     .new-instance-btn {
-      display: block; width: 100%; padding: 9px; background: transparent; border: none;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%;
+      flex: 1;
+      min-height: 36px;
+      background: transparent; border: none;
       border-top: 0.5px solid var(--border); color: var(--text-tertiary); font-size: 12px;
       font-family: 'DM Sans', sans-serif; cursor: pointer; text-align: center;
-      margin-top: auto; flex-shrink: 0;
     }
 
     .new-instance-btn:hover { background: var(--bg-secondary); color: var(--text-secondary); }
 
+    /* ── Modal (shared) ── */
     .modal-overlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.4);
       display: flex; align-items: center; justify-content: center;
@@ -221,24 +291,175 @@
     }
 
     .btn-cancel:hover { background: var(--bg-secondary); }
-    .btn-save:hover { opacity: 0.85; }
+    .btn-save:hover   { opacity: 0.85; }
+
+    /* ══════════════════════════════════════════
+       DAILY TARGETS
+    ══════════════════════════════════════════ */
+
+    .dt-col {
+      width: calc(100% / 7);
+      min-width: 130px;
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    .dt-col:first-child { border-left: 0.5px solid var(--border); }
+
+    .dt-header {
+      padding: 10px 12px 8px;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dt-day-name {
+      font-size: 13px; font-weight: 500; color: var(--text-primary);
+    }
+
+    .dt-edit-btn {
+      background: none; border: none; cursor: pointer;
+      color: var(--text-tertiary); padding: 2px 4px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .dt-edit-btn:hover { color: var(--text-secondary); background: var(--bg-secondary); }
+
+    .dt-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .dt-body::-webkit-scrollbar { width: 3px; }
+    .dt-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .dt-block {
+      flex: 1;
+      border-bottom: 0.5px solid var(--border);
+      display: flex;
+      align-items: stretch;
+      min-height: 60px;
+    }
+
+    .dt-block:last-child { border-bottom: none; }
+
+    .dt-block-inner {
+      flex: 1;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 10px 10px 10px 12px;
+      gap: 8px;
+    }
+
+    .dt-block-text {
+      font-family: 'Lora', serif;
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .dt-block-text.empty { color: var(--text-tertiary); font-style: italic; font-size: 12px; }
+
+    .dt-checkbox {
+      flex-shrink: 0;
+      width: 22px; height: 22px;
+      border-radius: 5px;
+      border: 1.5px solid var(--border-hover);
+      background: transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      transition: border-color 0.12s, background 0.12s;
+      margin-top: 1px;
+      user-select: none; -webkit-user-select: none;
+    }
+
+    .dt-checkbox[data-state="check"] { border-color: #22a95b; background: #e8f8ee; color: #22a95b; }
+    .dt-checkbox[data-state="cross"] { border-color: #e03030; background: #fdeaea; color: #e03030; }
+    .dt-checkbox[data-state="blank"] { color: transparent; }
+
+    @media (prefers-color-scheme: dark) {
+      .dt-checkbox[data-state="check"] { background: #1a3d2a; }
+      .dt-checkbox[data-state="cross"] { background: #3d1a1a; }
+    }
+
+    /* Daily Targets edit modal */
+    .dt-modal {
+      background: var(--bg); border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border-hover);
+      padding: 1.25rem; width: 100%; max-width: 520px;
+    }
+
+    .dt-modal h3 {
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 18px; font-weight: 400; margin-bottom: 1rem; color: var(--text-primary);
+    }
+
+    .dt-edit-fields { display: flex; flex-direction: column; gap: 8px; }
+
+    .dt-edit-field { display: flex; align-items: flex-start; gap: 8px; }
+
+    .dt-edit-label {
+      font-size: 11px; font-weight: 500; color: var(--text-tertiary);
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding-top: 9px; min-width: 52px;
+    }
+
+    .dt-edit-textarea {
+      flex: 1;
+      font-family: 'Lora', serif; font-size: 13px; line-height: 1.7;
+      color: var(--text-primary); background: var(--bg-secondary);
+      border: 0.5px solid var(--border-hover); border-radius: var(--radius-md);
+      padding: 8px 10px; resize: vertical; min-height: 52px;
+    }
+
+    .dt-edit-textarea:focus { outline: none; border-color: var(--text-tertiary); }
   </style>
 </head>
 <body>
 
 <div class="app">
   <div class="app-header">
-    <span class="app-title">Dream Journal</span>
-    <div class="nav-controls">
+    <div class="header-left">
+      <span class="app-title active" id="tab-dream" onclick="switchTab('dream')">Dream Journal</span>
+      <span class="app-title" id="tab-targets" onclick="switchTab('targets')">Daily Targets</span>
+    </div>
+
+    <!-- Dream Journal nav -->
+    <div class="nav-controls" id="dream-nav">
       <select class="nav-select" id="month-select" onchange="jumpToMonth()"></select>
       <select class="nav-select" id="year-select" onchange="jumpToMonth()"></select>
     </div>
+
+    <!-- Daily Targets nav -->
+    <div class="nav-controls" id="targets-nav" style="display:none;">
+      <div class="week-picker-wrap" id="week-picker-wrap">
+        <button class="week-btn" id="week-btn" onclick="toggleWeekDropdown()"></button>
+        <div class="week-dropdown" id="week-dropdown" style="display:none;"></div>
+      </div>
+    </div>
   </div>
+
   <div class="scroll-area" id="scroll-area">
     <div class="days-row" id="days-row"></div>
   </div>
 </div>
 
+<!-- Dream Journal modal -->
 <div class="modal-overlay" id="modal" style="display:none;">
   <div class="modal">
     <h3 id="modal-title">New dream</h3>
@@ -250,11 +471,29 @@
   </div>
 </div>
 
+<!-- Daily Targets edit modal -->
+<div class="modal-overlay" id="dt-modal" style="display:none;">
+  <div class="dt-modal">
+    <h3 id="dt-modal-title">Edit targets</h3>
+    <div class="dt-edit-fields" id="dt-edit-fields"></div>
+    <div class="modal-actions" style="margin-top:14px;">
+      <button class="btn-cancel" onclick="closeDtModal()">Cancel</button>
+      <button class="btn-save" onclick="saveDtTargets()">Save</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  /* ═══════════════════════════════════════
+     CONSTANTS
+  ═══════════════════════════════════════ */
+  const DOW_FULL     = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const MONTHS_FULL  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+  /* ═══════════════════════════════════════
+     DATE UTILITIES
+  ═══════════════════════════════════════ */
   function todayISO() {
     const n = new Date();
     return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
@@ -275,15 +514,37 @@
     return toISO(d);
   }
 
-  let data = null;
-  try { data = JSON.parse(localStorage.getItem('dreamjournal_v1')); } catch(e) {}
-  if (!data) data = { entries: [] };
-
-  function persist() {
-    try { localStorage.setItem('dreamjournal_v1', JSON.stringify(data)); } catch(e) {}
+  function escHtml(str) {
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function getEntry(date) { return data.entries.find(e => e.date === date); }
+  /* ═══════════════════════════════════════
+     TAB SWITCHING
+  ═══════════════════════════════════════ */
+  let currentTab = 'dream';
+
+  function switchTab(tab) {
+    currentTab = tab;
+    document.getElementById('tab-dream').classList.toggle('active', tab === 'dream');
+    document.getElementById('tab-targets').classList.toggle('active', tab === 'targets');
+    document.getElementById('dream-nav').style.display   = tab === 'dream'   ? 'flex' : 'none';
+    document.getElementById('targets-nav').style.display = tab === 'targets' ? 'flex' : 'none';
+    if (tab === 'dream')   renderDream();
+    if (tab === 'targets') renderTargets();
+  }
+
+  /* ═══════════════════════════════════════
+     DREAM JOURNAL — data
+  ═══════════════════════════════════════ */
+  let dreamData = null;
+  try { dreamData = JSON.parse(localStorage.getItem('dreamjournal_v1')); } catch(e) {}
+  if (!dreamData) dreamData = { entries: [] };
+
+  function persistDream() {
+    try { localStorage.setItem('dreamjournal_v1', JSON.stringify(dreamData)); } catch(e) {}
+  }
+
+  function getEntry(date) { return dreamData.entries.find(e => e.date === date); }
 
   function getDays() {
     const today = todayISO();
@@ -292,49 +553,39 @@
     return days;
   }
 
-  function escHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
+  /* ── Nav selects ── */
   function populateNavSelects() {
-    const today = new Date();
+    const today   = new Date();
     const yearSel = document.getElementById('year-select');
-    const monthSel = document.getElementById('month-select');
+    const monthSel= document.getElementById('month-select');
 
     yearSel.innerHTML = '';
-    for (let y = today.getFullYear(); y >= today.getFullYear() - 1; y--) {
+    // Change 1: current year (2026) + 2027; no 2025
+    for (let y = today.getFullYear() + 1; y >= today.getFullYear(); y--) {
       const opt = document.createElement('option');
-      opt.value = y;
-      opt.textContent = y;
+      opt.value = y; opt.textContent = y;
       if (y === today.getFullYear()) opt.selected = true;
       yearSel.appendChild(opt);
     }
 
     monthSel.innerHTML = '';
-    MONTHS.forEach((m, i) => {
+    // Change 2: full month names
+    MONTHS_FULL.forEach((m, i) => {
       const opt = document.createElement('option');
-      opt.value = i;
-      opt.textContent = m;
+      opt.value = i; opt.textContent = m;
       if (i === today.getMonth()) opt.selected = true;
       monthSel.appendChild(opt);
     });
   }
 
   function jumpToMonth() {
-    const year = parseInt(document.getElementById('year-select').value);
+    const year  = parseInt(document.getElementById('year-select').value);
     const month = parseInt(document.getElementById('month-select').value);
     const target = new Date(year, month, 1);
-    const targetISO = toISO(target);
-
-    const el = document.getElementById('day-' + targetISO);
-    if (el) {
-      el.scrollIntoView({ inline: 'start', behavior: 'smooth' });
-      return;
-    }
-
+    const el = document.getElementById('day-' + toISO(target));
+    if (el) { el.scrollIntoView({ inline: 'start', behavior: 'smooth' }); return; }
     const days = getDays();
-    let closest = days[0];
-    let closestDiff = Infinity;
+    let closest = days[0], closestDiff = Infinity;
     days.forEach(iso => {
       const diff = Math.abs(parseISO(iso) - target);
       if (diff < closestDiff) { closestDiff = diff; closest = iso; }
@@ -343,14 +594,15 @@
     if (closestEl) closestEl.scrollIntoView({ inline: 'start', behavior: 'smooth' });
   }
 
-  function renderAll() {
+  /* ── Render ── */
+  function renderDream() {
     const days = getDays();
-    const row = document.getElementById('days-row');
+    const row  = document.getElementById('days-row');
 
     row.innerHTML = days.map(iso => {
-      const dt = parseISO(iso);
-      const entry = getEntry(iso);
-      const count = entry ? entry.instances.length : 0;
+      const dt      = parseISO(iso);
+      const entry   = getEntry(iso);
+      const count   = entry ? entry.instances.length : 0;
       const isLucid = entry && entry.dreamType === 'lucid';
 
       const instancesHTML = entry ? entry.instances.map((inst, idx) => `
@@ -363,23 +615,26 @@
         </div>
       `).join('') : '';
 
+      // Change 4: empty-day flex-fills; button fills it entirely
       const emptyHTML = !entry ? `
         <div class="empty-day">
           <button class="add-first-btn" onclick="openModal('${iso}', null)">+ add</button>
         </div>
       ` : '';
 
+      // Change 5: new-instance-btn is flex:1 so it fills remaining space
       const addBtn = entry ? `
         <button class="new-instance-btn" onclick="openModal('${iso}', null)">+ new instance</button>
       ` : '';
 
+      // Change 2: full month and full day-of-week
       return `<div class="day-col" id="day-${iso}">
         <div class="day-header">
           <div class="day-header-row">
             <div class="day-date">
               <span class="day-num">${dt.getDate()}</span>
-              <span class="day-month">${MONTHS_SHORT[dt.getMonth()]}</span>
-              <span class="day-dow">${DOW[dt.getDay()]}</span>
+              <span class="day-month">${MONTHS_FULL[dt.getMonth()]}</span>
+              <span class="day-dow">${DOW_FULL[dt.getDay()]}</span>
             </div>
             <div class="day-meta">
               ${entry ? `<select class="lucid-select${isLucid?' is-lucid':''}" onchange="setDreamType('${iso}', this.value)">
@@ -404,19 +659,21 @@
     }, 30);
   }
 
+  /* ── Dream modal ── */
   let modalContext = null;
 
   function openModal(date, instId) {
     modalContext = { date, instId };
     if (instId !== null && instId !== undefined) {
-      const e = getEntry(date);
+      const e    = getEntry(date);
       const inst = e && e.instances.find(i => i.id === instId);
       document.getElementById('modal-title').textContent = 'Edit dream';
       document.getElementById('m-body').value = inst ? inst.body : '';
     } else {
-      const dt = parseISO(date);
+      const dt    = parseISO(date);
       const label = `${dt.getDate()} ${MONTHS_SHORT[dt.getMonth()]}`;
-      document.getElementById('modal-title').textContent = date === todayISO() ? 'New dream — today' : `New dream — ${label}`;
+      document.getElementById('modal-title').textContent =
+        date === todayISO() ? 'New dream — today' : `New dream — ${label}`;
       document.getElementById('m-body').value = '';
     }
     document.getElementById('modal').style.display = 'flex';
@@ -434,40 +691,254 @@
     const body = document.getElementById('m-body').value.trim();
     if (!body) return;
     const { date, instId } = modalContext;
-
     if (instId !== null && instId !== undefined) {
-      const e = getEntry(date);
+      const e    = getEntry(date);
       const inst = e && e.instances.find(i => i.id === instId);
       if (inst) inst.body = body;
     } else {
       let entry = getEntry(date);
       if (!entry) {
         entry = { date, dreamType: 'normal', instances: [] };
-        data.entries.push(entry);
+        dreamData.entries.push(entry);
       }
       entry.instances.push({ id: Date.now(), body });
     }
-
-    persist();
+    persistDream();
     closeModal();
-    renderAll();
+    renderDream();
   }
 
   function setDreamType(date, val) {
     const e = getEntry(date);
-    if (e) { e.dreamType = val; persist(); renderAll(); }
+    if (e) { e.dreamType = val; persistDream(); renderDream(); }
   }
 
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target === this) closeModal();
   });
 
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
+  /* ═══════════════════════════════════════
+     DAILY TARGETS — data
+     Storage key: 'dailytargets_v1'
+     {
+       templates: { "Sunday": ["t1","t2","t3","t4"], ... },
+       weeks: {
+         "2026-03-29": {
+           "Sunday": [{state:"blank"}, ...],  // 4 items
+           ...
+         }
+       }
+     }
+  ═══════════════════════════════════════ */
+  let dtData = null;
+  try { dtData = JSON.parse(localStorage.getItem('dailytargets_v1')); } catch(e) {}
+  if (!dtData) dtData = { templates: {}, weeks: {} };
+
+  function persistDt() {
+    try { localStorage.setItem('dailytargets_v1', JSON.stringify(dtData)); } catch(e) {}
+  }
+
+  function getSundayOfWeek(iso) {
+    const d = parseISO(iso);
+    d.setDate(d.getDate() - d.getDay());
+    return toISO(d);
+  }
+
+  // All Sundays from 2026-01-04 through 2026-12-27
+  function getAllWeekSundays() {
+    const sundays = [];
+    let d = new Date(2026, 0, 1);
+    while (d.getDay() !== 0) d.setDate(d.getDate() + 1);  // first Sunday of 2026
+    const end = new Date(2026, 11, 27);
+    while (d <= end) {
+      sundays.push(toISO(d));
+      d.setDate(d.getDate() + 7);
+    }
+    return sundays;
+  }
+
+  let currentWeekSunday = getSundayOfWeek(todayISO());
+
+  function clampWeek() {
+    const sundays = getAllWeekSundays();
+    if (!sundays.includes(currentWeekSunday)) {
+      currentWeekSunday = sundays.reduce((prev, cur) =>
+        Math.abs(parseISO(cur) - parseISO(currentWeekSunday)) <
+        Math.abs(parseISO(prev) - parseISO(currentWeekSunday)) ? cur : prev
+      );
+    }
+  }
+
+  function formatWeekLabel(sundayISO) {
+    const d = parseISO(sundayISO);
+    return `${d.getMonth()+1}/${d.getDate()}`;
+  }
+
+  function getWeekData(sundayISO) {
+    if (!dtData.weeks[sundayISO]) dtData.weeks[sundayISO] = {};
+    const week = dtData.weeks[sundayISO];
+    DOW_FULL.forEach(day => {
+      if (!week[day]) week[day] = [{state:'blank'},{state:'blank'},{state:'blank'},{state:'blank'}];
+    });
+    return week;
+  }
+
+  function getTemplate(day) {
+    return dtData.templates[day] || ['','','',''];
+  }
+
+  /* ── Week picker ── */
+  function updateWeekBtn() {
+    document.getElementById('week-btn').textContent = formatWeekLabel(currentWeekSunday);
+  }
+
+  function buildWeekDropdown() {
+    const dd      = document.getElementById('week-dropdown');
+    const sundays = getAllWeekSundays();
+    dd.innerHTML  = sundays.map(s => `
+      <div class="week-dropdown-item${s === currentWeekSunday ? ' selected' : ''}"
+           onclick="selectWeek('${s}')">
+        ${formatWeekLabel(s)}
+      </div>
+    `).join('');
+    // Scroll selected item into view
+    setTimeout(() => {
+      const sel = dd.querySelector('.selected');
+      if (sel) sel.scrollIntoView({ block: 'nearest' });
+    }, 10);
+  }
+
+  function toggleWeekDropdown() {
+    const dd   = document.getElementById('week-dropdown');
+    const open = dd.style.display !== 'none';
+    if (!open) { buildWeekDropdown(); dd.style.display = 'block'; }
+    else        { dd.style.display = 'none'; }
+  }
+
+  function selectWeek(sundayISO) {
+    currentWeekSunday = sundayISO;
+    document.getElementById('week-dropdown').style.display = 'none';
+    updateWeekBtn();
+    renderTargets();
+  }
+
+  // Close week dropdown on outside click
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('week-picker-wrap');
+    if (wrap && !wrap.contains(e.target)) {
+      document.getElementById('week-dropdown').style.display = 'none';
+    }
   });
 
+  /* ── Checkbox cycle: blank → check → cross → blank ── */
+  function cycleCheckbox(sundayISO, day, idx) {
+    const week   = getWeekData(sundayISO);
+    const states = ['blank','check','cross'];
+    const cur    = week[day][idx].state;
+    const next   = states[(states.indexOf(cur) + 1) % states.length];
+    week[day][idx].state = next;
+    persistDt();
+    // Patch DOM without full re-render
+    const el = document.getElementById(`cb-${day}-${idx}`);
+    if (el) {
+      el.dataset.state  = next;
+      el.textContent    = next === 'check' ? '✓' : next === 'cross' ? '✗' : '';
+    }
+  }
+
+  /* ── Render targets ── */
+  function renderTargets() {
+    clampWeek();
+    updateWeekBtn();
+    const row  = document.getElementById('days-row');
+    const week = getWeekData(currentWeekSunday);
+
+    row.innerHTML = DOW_FULL.map(day => {
+      const tmpl   = getTemplate(day);
+      const checks = week[day];
+
+      const blocksHTML = [0,1,2,3].map(idx => {
+        const text        = tmpl[idx] || '';
+        const state       = checks[idx] ? checks[idx].state : 'blank';
+        const checkSymbol = state === 'check' ? '✓' : state === 'cross' ? '✗' : '';
+        return `
+          <div class="dt-block">
+            <div class="dt-block-inner">
+              <div class="dt-block-text${text ? '' : ' empty'}">${text ? escHtml(text) : 'No target set'}</div>
+              <div class="dt-checkbox"
+                   id="cb-${day}-${idx}"
+                   data-state="${state}"
+                   onclick="cycleCheckbox('${currentWeekSunday}','${day}',${idx})"
+              >${checkSymbol}</div>
+            </div>
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="dt-col">
+          <div class="dt-header">
+            <span class="dt-day-name">${day}</span>
+            <button class="dt-edit-btn" onclick="openDtModal('${day}')" title="Edit targets for ${day}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                   stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="dt-body">${blocksHTML}</div>
+        </div>`;
+    }).join('');
+  }
+
+  /* ── Daily Targets edit modal ── */
+  let dtModalDay = null;
+
+  function openDtModal(day) {
+    dtModalDay = day;
+    const tmpl = getTemplate(day);
+    document.getElementById('dt-modal-title').textContent = `Edit — ${day}`;
+    const fields = document.getElementById('dt-edit-fields');
+    fields.innerHTML = [0,1,2,3].map(idx => `
+      <div class="dt-edit-field">
+        <span class="dt-edit-label">Target ${idx+1}</span>
+        <textarea class="dt-edit-textarea" id="dt-field-${idx}"
+                  placeholder="Target ${idx+1}...">${escHtml(tmpl[idx] || '')}</textarea>
+      </div>
+    `).join('');
+    document.getElementById('dt-modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('dt-field-0').focus(), 50);
+  }
+
+  function closeDtModal() {
+    document.getElementById('dt-modal').style.display = 'none';
+    dtModalDay = null;
+  }
+
+  function saveDtTargets() {
+    if (!dtModalDay) return;
+    dtData.templates[dtModalDay] = [0,1,2,3].map(i =>
+      document.getElementById(`dt-field-${i}`).value.trim()
+    );
+    persistDt();
+    closeDtModal();
+    renderTargets();
+  }
+
+  document.getElementById('dt-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeDtModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { closeModal(); closeDtModal(); }
+  });
+
+  /* ═══════════════════════════════════════
+     INIT
+  ═══════════════════════════════════════ */
   populateNavSelects();
-  renderAll();
+  renderDream();
 </script>
 </body>
 </html>
