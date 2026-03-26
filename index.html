@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dream Journal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f3;
+      --bg-tertiary: #eeede9;
+      --text-primary: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --text-tertiary: #aaa;
+      --border: rgba(0,0,0,0.1);
+      --border-hover: rgba(0,0,0,0.2);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1a1a;
+        --bg-secondary: #242424;
+        --bg-tertiary: #2e2e2e;
+        --text-primary: #f0f0f0;
+        --text-secondary: #999;
+        --text-tertiary: #666;
+        --border: rgba(255,255,255,0.1);
+        --border-hover: rgba(255,255,255,0.2);
+      }
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'DM Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    .app {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      padding: 14px 16px 12px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-title {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 20px;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+
+    .app-subtitle {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+
+    .scroll-area {
+      flex: 1;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border-hover) transparent;
+    }
+
+    .scroll-area::-webkit-scrollbar { height: 4px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
+
+    .days-row {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      min-width: max-content;
+    }
+
+    .day-col {
+      width: 50vw;
+      min-width: 160px;
+      max-width: 280px;
+      border-right: 0.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex-shrink: 0;
+    }
+
+    .day-col:first-child { border-left: 0.5px solid var(--border); }
+
+    .day-header {
+      padding: 10px 12px 8px;
+      border-bottom: 0.5px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+
+    .day-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .day-date {
+      display: flex;
+      align-items: baseline;
+      gap: 5px;
+    }
+
+    .day-num {
+      font-size: 20px;
+      font-weight: 500;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    .day-month {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .day-dow {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .day-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lucid-select {
+      font-size: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      padding: 3px 6px;
+      border-radius: 20px;
+      border: 0.5px solid var(--border-hover);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+    }
+
+    .lucid-select.is-lucid {
+      background: #EEEDFE;
+      color: #3C3489;
+      border-color: #AFA9EC;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .lucid-select.is-lucid {
+        background: #26215C;
+        color: #CECBF6;
+        border-color: #534AB7;
+      }
+    }
+
+    .instance-count {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+    }
+
+    .day-body {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .day-body::-webkit-scrollbar { width: 3px; }
+    .day-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .instance-block {
+      padding: 10px 12px;
+      border-bottom: 0.5px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .instance-label {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 5px;
+    }
+
+    .instance-text {
+      font-family: 'Lora', serif;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .instance-actions { margin-top: 7px; }
+
+    .action-btn {
+      font-size: 11px;
+      padding: 3px 8px;
+      border: 0.5px solid var(--border-hover);
+      border-radius: var(--radius-md);
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .action-btn:hover { background: var(--bg-secondary); }
+
+    .empty-day {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .add-first-btn {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      padding: 8px;
+    }
+
+    .add-first-btn:hover { color: var(--text-secondary); }
+
+    .new-instance-btn {
+      display: block;
+      width: 100%;
+      padding: 9px;
+      background: transparent;
+      border: none;
+      border-top: 0.5px solid var(--border);
+      color: var(--text-tertiary);
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+
+    .new-instance-btn:hover { background: var(--bg-secondary); color: var(--text-secondary); }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 100; padding: 1rem;
+    }
+
+    .modal {
+      background: var(--bg);
+      border-radius: var(--radius-lg);
+      border: 0.5px solid var(--border-hover);
+      padding: 1.25rem;
+      width: 100%; max-width: 480px;
+    }
+
+    .modal h3 {
+      font-family: 'Lora', serif;
+      font-style: italic;
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .modal textarea {
+      width: 100%;
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      background: var(--bg-secondary);
+      border: 0.5px solid var(--border-hover);
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    .modal textarea:focus { outline: none; border-color: var(--text-tertiary); }
+
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
+
+    .btn-cancel {
+      padding: 7px 14px; font-size: 13px;
+      border: 0.5px solid var(--border-hover);
+      border-radius: var(--radius-md);
+      background: transparent; color: var(--text-secondary);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-save {
+      padding: 7px 14px; font-size: 13px; font-weight: 500;
+      border: none; border-radius: var(--radius-md);
+      background: var(--text-primary); color: var(--bg);
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-cancel:hover { background: var(--bg-secondary); }
+    .btn-save:hover { opacity: 0.85; }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="app-header">
+    <span class="app-title">Dream Journal</span>
+    <span class="app-subtitle" id="entry-count"></span>
+  </div>
+  <div class="scroll-area" id="scroll-area">
+    <div class="days-row" id="days-row"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal" style="display:none;">
+  <div class="modal">
+    <h3 id="modal-title">New dream</h3>
+    <textarea id="m-body" placeholder="Describe your dream..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveInstance()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  function todayISO() {
+    const n = new Date();
+    return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+  }
+
+  function parseISO(s) {
+    const [y,m,d] = s.split('-').map(Number);
+    return new Date(y, m-1, d);
+  }
+
+  function offsetISO(base, days) {
+    const d = parseISO(base);
+    d.setDate(d.getDate() + days);
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+
+  let data = null;
+  try { data = JSON.parse(localStorage.getItem('dreamjournal_v1')); } catch(e) {}
+  if (!data) data = { entries: [] };
+
+  function persist() {
+    try { localStorage.setItem('dreamjournal_v1', JSON.stringify(data)); } catch(e) {}
+  }
+
+  function getEntry(date) {
+    return data.entries.find(e => e.date === date);
+  }
+
+  function getDays() {
+    const today = todayISO();
+    const days = [];
+    for (let i = 179; i >= 0; i--) days.push(offsetISO(today, -i));
+    return days;
+  }
+
+  function updateCount() {
+    const total = data.entries.length;
+    document.getElementById('entry-count').textContent = total ? `${total} night${total !== 1 ? 's' : ''} logged` : '';
+  }
+
+  function renderAll() {
+    const days = getDays();
+    const row = document.getElementById('days-row');
+
+    row.innerHTML = days.map(iso => {
+      const dt = parseISO(iso);
+      const entry = getEntry(iso);
+      const count = entry ? entry.instances.length : 0;
+      const isLucid = entry && entry.dreamType === 'lucid';
+
+      const instancesHTML = entry ? entry.instances.map((inst, idx) => `
+        <div class="instance-block">
+          ${count > 1 ? `<div class="instance-label">Dream ${idx+1}</div>` : ''}
+          <div class="instance-text">${escHtml(inst.body)}</div>
+          <div class="instance-actions">
+            <button class="action-btn" onclick="editInstance('${iso}', ${inst.id})">Edit</button>
+          </div>
+        </div>
+      `).join('') : '';
+
+      const emptyHTML = !entry ? `
+        <div class="empty-day">
+          <button class="add-first-btn" onclick="openModal('${iso}', null)">+ add</button>
+        </div>
+      ` : '';
+
+      const addBtn = entry ? `
+        <button class="new-instance-btn" onclick="openModal('${iso}', null)">+ new instance</button>
+      ` : '';
+
+      return `<div class="day-col" id="day-${iso}">
+        <div class="day-header">
+          <div class="day-header-row">
+            <div class="day-date">
+              <span class="day-num">${dt.getDate()}</span>
+              <span class="day-month">${MONTHS[dt.getMonth()]}</span>
+              <span class="day-dow">${DOW[dt.getDay()]}</span>
+            </div>
+            <div class="day-meta">
+              ${entry ? `<select class="lucid-select${isLucid ? ' is-lucid' : ''}" onchange="setDreamType('${iso}', this.value)">
+                <option value="normal"${!isLucid ? ' selected' : ''}>normal</option>
+                <option value="lucid"${isLucid ? ' selected' : ''}>lucid</option>
+              </select>` : ''}
+              ${count >= 2 ? `<span class="instance-count">${count}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="day-body">
+          ${instancesHTML}
+          ${emptyHTML}
+          ${addBtn}
+        </div>
+      </div>`;
+    }).join('');
+
+    updateCount();
+
+    setTimeout(() => {
+      const todayEl = document.getElementById('day-' + todayISO());
+      if (todayEl) todayEl.scrollIntoView({ inline: 'end', behavior: 'instant' });
+    }, 30);
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  let modalContext = null;
+
+  function openModal(date, instId) {
+    modalContext = { date, instId };
+    if (instId !== null && instId !== undefined) {
+      const e = getEntry(date);
+      const inst = e && e.instances.find(i => i.id === instId);
+      document.getElementById('modal-title').textContent = 'Edit dream';
+      document.getElementById('m-body').value = inst ? inst.body : '';
+    } else {
+      const dt = parseISO(date);
+      const label = `${dt.getDate()} ${MONTHS[dt.getMonth()]}`;
+      document.getElementById('modal-title').textContent = date === todayISO() ? 'New dream — today' : `New dream — ${label}`;
+      document.getElementById('m-body').value = '';
+    }
+    document.getElementById('modal').style.display = 'flex';
+    setTimeout(() => document.getElementById('m-body').focus(), 50);
+  }
+
+  function editInstance(date, instId) { openModal(date, instId); }
+
+  function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+    modalContext = null;
+  }
+
+  function saveInstance() {
+    const body = document.getElementById('m-body').value.trim();
+    if (!body) return;
+    const { date, instId } = modalContext;
+
+    if (instId !== null && instId !== undefined) {
+      const e = getEntry(date);
+      const inst = e && e.instances.find(i => i.id === instId);
+      if (inst) inst.body = body;
+    } else {
+      let entry = getEntry(date);
+      if (!entry) {
+        entry = { date, dreamType: 'normal', instances: [] };
+        data.entries.push(entry);
+      }
+      entry.instances.push({ id: Date.now(), body });
+    }
+
+    persist();
+    closeModal();
+    renderAll();
+  }
+
+  function setDreamType(date, val) {
+    const e = getEntry(date);
+    if (e) { e.dreamType = val; persist(); renderAll(); }
+  }
+
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  renderAll();
+</script>
+</body>
+</html>
