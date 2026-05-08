@@ -718,6 +718,11 @@
   });
 
   /* ═══════════════════════════════════════
+     DAILY TARGETS — config
+  ═══════════════════════════════════════ */
+  const TARGET_COUNT = 17; // ← change this to set the number of daily targets
+
+  /* ═══════════════════════════════════════
      DAILY TARGETS — data
      Storage key: 'dailytargets_v1'
      {
@@ -778,13 +783,13 @@
     if (!dtData.weeks[sundayISO]) dtData.weeks[sundayISO] = {};
     const week = dtData.weeks[sundayISO];
     DOW_FULL.forEach(day => {
-      if (!week[day]) week[day] = [{state:'blank'},{state:'blank'},{state:'blank'},{state:'blank'}];
+      if (!week[day]) week[day] = Array.from({length: TARGET_COUNT}, () => ({state:'blank'}));
     });
     return week;
   }
 
   function getTemplate(day) {
-    return dtData.templates[day] || ['','','',''];
+    return dtData.templates[day] || Array(TARGET_COUNT).fill('');
   }
 
   /* ── Week picker ── */
@@ -857,7 +862,7 @@
       const tmpl   = getTemplate(day);
       const checks = week[day];
 
-      const blocksHTML = [0,1,2,3].map(idx => {
+      const blocksHTML = Array.from({length: TARGET_COUNT}, (_, idx) => {
         const text        = tmpl[idx] || '';
         const state       = checks[idx] ? checks[idx].state : 'blank';
         const checkSymbol = state === 'check' ? '✓' : state === 'cross' ? '✗' : '';
@@ -900,7 +905,7 @@
     const tmpl = getTemplate(day);
     document.getElementById('dt-modal-title').textContent = `Edit — ${day}`;
     const fields = document.getElementById('dt-edit-fields');
-    fields.innerHTML = [0,1,2,3].map(idx => `
+    fields.innerHTML = Array.from({length: TARGET_COUNT}, (_, idx) => `
       <div class="dt-edit-field">
         <span class="dt-edit-label">Target ${idx+1}</span>
         <textarea class="dt-edit-textarea" id="dt-field-${idx}"
@@ -918,7 +923,7 @@
 
   function saveDtTargets() {
     if (!dtModalDay) return;
-    dtData.templates[dtModalDay] = [0,1,2,3].map(i =>
+    dtData.templates[dtModalDay] = Array.from({length: TARGET_COUNT}, (_, i) =>
       document.getElementById(`dt-field-${i}`).value.trim()
     );
     persistDt();
